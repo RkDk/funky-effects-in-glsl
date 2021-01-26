@@ -16,20 +16,20 @@ void createQuadVAO(VertexArrayObject* vao) {
       .t = 0.0f
     },
     {
-      .x = 100.0f,
+      .x = 1.0f,
       .y = 0.0f,
       .s = 1.0f,
       .t = 0.0f
     },
     {
-      .x = 100.0f,
-      .y = 100.0f,
+      .x = 1.0f,
+      .y = 1.0f,
       .s = 1.0f,
       .t = 1.0f
     },
     {
       .x = 0.0f,
-      .y = 100.0f,
+      .y = 1.0f,
       .s = 0.0f,
       .t = 1.0f
     }

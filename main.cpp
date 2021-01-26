@@ -15,20 +15,23 @@
 
 #include "RenderContext.h"
 
-void setShaderUniforms(ShaderProgram* shaderProgram) {
-  const GLuint& glShaderProgram = shaderProgram->getShaderProgram();
+void setShaderUniforms(RenderContext *renderContext) {
+  const GLuint& glShaderProgram = renderContext->shaderProgram.getShaderProgram();
   
   GLint textureUniform = glGetUniformLocation(glShaderProgram, "textureId");
   GLint viewUniform = glGetUniformLocation(glShaderProgram, "view");
   GLint projUniform = glGetUniformLocation(glShaderProgram, "projection");
+  GLint modelUniform = glGetUniformLocation(glShaderProgram, "model");
   
   glUniform1i(textureUniform, 0);
   
   glm::mat4 viewMatrix(1.0f);
   glm::mat4 projMatrix = glm::ortho<float>(0.0f, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f);
+  glm::mat4 modelMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(renderContext->imageWidth, renderContext->imageHeight, 1.0f));
   
   glUniformMatrix4fv(viewUniform, 1, GL_FALSE, glm::value_ptr(viewMatrix));
   glUniformMatrix4fv(projUniform, 1, GL_FALSE, glm::value_ptr(projMatrix));
+  glUniformMatrix4fv(modelUniform, 1, GL_FALSE, glm::value_ptr(modelMatrix));
 }
 
 void render(RenderContext *renderContext) {
@@ -37,7 +40,7 @@ void render(RenderContext *renderContext) {
   glUseProgram(renderContext->shaderProgram.getShaderProgram());
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, renderContext->imageTexture);
-  setShaderUniforms(&renderContext->shaderProgram);
+  setShaderUniforms(renderContext);
   glDrawElements(GL_TRIANGLE_STRIP, 6, GL_UNSIGNED_INT, NULL);
   glBindTexture(GL_TEXTURE_2D, 0);
   glBindVertexArray(0);
