@@ -18,8 +18,11 @@
 void setShaderUniforms(ShaderProgram* shaderProgram) {
   const GLuint& glShaderProgram = shaderProgram->getShaderProgram();
   
+  GLint textureUniform = glGetUniformLocation(glShaderProgram, "textureId");
   GLint viewUniform = glGetUniformLocation(glShaderProgram, "view");
   GLint projUniform = glGetUniformLocation(glShaderProgram, "projection");
+  
+  glUniform1i(textureUniform, 0);
   
   glm::mat4 viewMatrix(1.0f);
   glm::mat4 projMatrix = glm::ortho<float>(0.0f, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f);
@@ -32,8 +35,11 @@ void render(RenderContext *renderContext) {
   glClear(GL_COLOR_BUFFER_BIT);
   glBindVertexArray(renderContext->quadVAO.getVAO());
   glUseProgram(renderContext->shaderProgram.getShaderProgram());
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, renderContext->imageTexture);
   setShaderUniforms(&renderContext->shaderProgram);
   glDrawElements(GL_TRIANGLE_STRIP, 6, GL_UNSIGNED_INT, NULL);
+  glBindTexture(GL_TEXTURE_2D, 0);
   glBindVertexArray(0);
   glUseProgram(0);
   SDL_GL_SwapWindow(renderContext->window);
@@ -64,7 +70,7 @@ int main(int argc, const char * argv[]) {
     return -1;
   }
   
-  loadImage("image.png", &renderContext.imageTexture);
+  loadImage("image.png", renderContext.imageWidth, renderContext.imageHeight, renderContext.imageTexture);
   
   createQuadVAO(&renderContext.quadVAO);
   mainLoop(&renderContext);

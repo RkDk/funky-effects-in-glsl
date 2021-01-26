@@ -18,6 +18,6 @@
 #include <SDL2/SDL.h>
 
 bool readFileIntoString(std::string, std::string*);
-bool loadImage(std::string, GLuint*);
+bool loadImage(std::string, unsigned int&, unsigned int &, GLuint&);
 
 #endif /* utils_h */

@@ -21,9 +21,8 @@ bool readFileIntoString(std::string fileName, std::string *dest) {
   return true;
 }
 
-bool loadImage(std::string fileName, GLuint* texture) {
+bool loadImage(std::string fileName, unsigned int &width, unsigned int &height, GLuint &texture) {
   std::vector<unsigned char> imageBuffer;
-  unsigned int width, height;
 
   const int error = lodepng::decode(imageBuffer, width, height, fileName.c_str());
   if(error != 0) {
@@ -49,8 +48,8 @@ bool loadImage(std::string fileName, GLuint* texture) {
     }
   }
   
-  glGenTextures(1, texture);
-  glBindTexture(GL_TEXTURE_2D, *texture);
+  glGenTextures(1, &texture);
+  glBindTexture(GL_TEXTURE_2D, texture);
   
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixelData);
   

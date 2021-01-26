@@ -19,6 +19,7 @@ struct RenderContext {
   SDL_Window *window = NULL;
   SDL_GLContext glContext = NULL;
   VertexArrayObject quadVAO;
+  unsigned int imageWidth, imageHeight;
   GLuint imageTexture;
   ShaderProgram shaderProgram;
   

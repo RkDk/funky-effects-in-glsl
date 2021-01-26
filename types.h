@@ -10,6 +10,7 @@
 
 struct Vertex {
   float x, y;
+  float s, t;
 };
 
 #endif /* types_h */
