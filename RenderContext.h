@@ -19,9 +19,11 @@ struct RenderContext {
   SDL_Window *window = NULL;
   SDL_GLContext glContext = NULL;
   VertexArrayObject quadVAO;
+  GLuint imageTexture;
   ShaderProgram shaderProgram;
   
   ~RenderContext() {
+    glDeleteTextures(1, &imageTexture);
     SDL_GL_DeleteContext(this->glContext);
     SDL_DestroyWindow(this->window);
   }

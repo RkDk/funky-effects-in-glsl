@@ -5,11 +5,9 @@
 //  Created by Rick Chou on 1/20/21.
 //
 
-#define LODEPNG_COMPILE_CPP
 
 #include <iostream>
 #include <fstream>
-#include <lodepng.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glad/glad.h>
@@ -65,6 +63,8 @@ int main(int argc, const char * argv[]) {
   if(!renderContext.shaderProgram.buildFromShaders("vertex.vs", "fragment.fs")) {
     return -1;
   }
+  
+  loadImage("image.png", &renderContext.imageTexture);
   
   createQuadVAO(&renderContext.quadVAO);
   mainLoop(&renderContext);
