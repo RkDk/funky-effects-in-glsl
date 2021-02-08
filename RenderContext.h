@@ -15,6 +15,11 @@
 #include "ShaderProgram.h"
 #include "constants.h"
 
+enum class RenderMode {
+  DEFAULT,
+  WAVY
+};
+
 struct RenderContext {
   SDL_Window *window = NULL;
   SDL_GLContext glContext = NULL;
@@ -22,6 +27,7 @@ struct RenderContext {
   unsigned int imageWidth, imageHeight;
   GLuint imageTexture;
   ShaderProgram shaderProgram;
+  RenderMode renderMode = RenderMode::DEFAULT;
   
   ~RenderContext() {
     glDeleteTextures(1, &imageTexture);

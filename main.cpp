@@ -15,9 +15,12 @@
 
 #include "RenderContext.h"
 
+int wavyFactor = 0;
+
 void setShaderUniforms(RenderContext *renderContext) {
   const GLuint& glShaderProgram = renderContext->shaderProgram.getShaderProgram();
   
+  GLint wavyFactorUniform = glGetUniformLocation(glShaderProgram, "wavyFactor");
   GLint textureUniform = glGetUniformLocation(glShaderProgram, "textureId");
   GLint viewUniform = glGetUniformLocation(glShaderProgram, "view");
   GLint projUniform = glGetUniformLocation(glShaderProgram, "projection");
@@ -28,7 +31,17 @@ void setShaderUniforms(RenderContext *renderContext) {
   glm::mat4 viewMatrix(1.0f);
   glm::mat4 projMatrix = glm::ortho<float>(0.0f, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f);
   glm::mat4 modelMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(renderContext->imageWidth, renderContext->imageHeight, 1.0f));
+
+  switch(renderContext->renderMode) {
+    case RenderMode::WAVY:
+      if(++wavyFactor > 359) {
+        wavyFactor = 0;
+      }
+      break;
+    default: break;
+  }
   
+  glUniform1i(wavyFactorUniform, wavyFactor);
   glUniformMatrix4fv(viewUniform, 1, GL_FALSE, glm::value_ptr(viewMatrix));
   glUniformMatrix4fv(projUniform, 1, GL_FALSE, glm::value_ptr(projMatrix));
   glUniformMatrix4fv(modelUniform, 1, GL_FALSE, glm::value_ptr(modelMatrix));
@@ -55,6 +68,16 @@ void mainLoop(RenderContext *renderContext) {
     
     if(event.type == SDL_QUIT) {
       return;
+    }
+
+    switch(event.key.keysym.sym) {
+      case SDLK_0:
+        renderContext->renderMode = RenderMode::DEFAULT;
+        wavyFactor = 0;
+        break;
+      case SDLK_1:
+        renderContext->renderMode = RenderMode::WAVY;
+      default: break;
     }
     
     render(renderContext);
