@@ -48,6 +48,8 @@ void setShaderUniforms(RenderContext *renderContext) {
 }
 
 void render(RenderContext *renderContext) {
+  
+  glBindFramebuffer(GL_FRAMEBUFFER, renderContext->renderTarget.getFrameBuffer());
   glClear(GL_COLOR_BUFFER_BIT);
   glBindVertexArray(renderContext->quadVAO.getVAO());
   glUseProgram(renderContext->shaderProgram.getShaderProgram());
@@ -58,6 +60,18 @@ void render(RenderContext *renderContext) {
   glBindTexture(GL_TEXTURE_2D, 0);
   glBindVertexArray(0);
   glUseProgram(0);
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  
+  glClear(GL_COLOR_BUFFER_BIT);
+  glBindVertexArray(renderContext->quadVAO.getVAO());
+  glUseProgram(renderContext->fbShaderProgram.getShaderProgram());
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, renderContext->renderTarget.getRenderTexture());
+  glDrawElements(GL_TRIANGLE_STRIP, 6, GL_UNSIGNED_INT, NULL);
+  glBindTexture(GL_TEXTURE_2D, 0);
+  glBindVertexArray(0);
+  glUseProgram(0);
+  
   SDL_GL_SwapWindow(renderContext->window);
 }
 
@@ -93,6 +107,15 @@ int main(int argc, const char * argv[]) {
   }
   
   if(!renderContext.shaderProgram.buildFromShaders("vertex.vs", "fragment.fs")) {
+    return -1;
+  }
+  
+  if(!renderContext.fbShaderProgram.buildFromShaders("fb-vertex.vs", "fb-fragment.fs")) {
+    return -1;
+  }
+  
+  if(!renderContext.renderTarget.initialize()) {
+    std::cout << "Failed to create framebuffer\n";
     return -1;
   }
   

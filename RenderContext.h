@@ -12,6 +12,7 @@
 #include <SDL2/SDL.h>
 
 #include "VertexArrayObject.h"
+#include "Framebuffer.h"
 #include "ShaderProgram.h"
 #include "constants.h"
 
@@ -27,6 +28,8 @@ struct RenderContext {
   unsigned int imageWidth, imageHeight;
   GLuint imageTexture;
   ShaderProgram shaderProgram;
+  ShaderProgram fbShaderProgram;
+  Framebuffer renderTarget;
   RenderMode renderMode = RenderMode::DEFAULT;
   
   ~RenderContext() {
